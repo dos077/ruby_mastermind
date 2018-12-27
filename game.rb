@@ -9,17 +9,8 @@ class Game
     end
 
     def guess(code)
-        right_color = 0
-        answer_key = @key_code.clone
-        code.each do |e|
-            if index = answer_key.index(e)
-                right_color+=1
-                answer_key.delete_at(index)
-            end
-        end
-        correct = 0
-        4.times { |i| correct+=1 if @key_code[i] == code[i] }
-        @guesses << { code: code, correct: correct, colors: right_color }
+        score = self.class.check_response(code, @key_code)
+        @guesses << { code: code, correct: score[0], colors: score[1] }
     end
 
     def display
@@ -49,6 +40,20 @@ class Game
         code.all? { |e| $colors.include?(e) }
     end
 
+    def self.check_response(code, key )
+        colors = 0
+        color_key = key.clone
+        code.each do |e|
+            if index = color_key.index(e)
+                colors+=1
+                color_key.delete_at(index)
+            end
+        end
+        correct = 0
+        4.times { |i| correct+=1 if key[i] == code[i] }
+        [correct, colors]
+    end
+
     private
 
     def display_code(code)
@@ -59,14 +64,49 @@ class Game
 
 end
 
-module AI
+class AI
+
+    def initialize
+        @set = $colors.repeated_permutation(4).to_a
+    end
+
     def self.generate_code
         code = []
         4.times { code << $colors.sample }
         code
     end
     
-    def self.guess(history)
+    def guess(last_guess)
+        return [$colors[1], $colors[1], $colors[2], $colors[2]] unless last_guess
+        #eliminating the impossibles
+        @set.delete_if {
+            |key| Game.check_response(last_guess[:code], key) != [last_guess[:correct], last_guess[:colors]]
+        }
+        best_guess = @set.sample
+        score = 1
+        @set.each do |branch|
+            branch_score = score_move(branch, score)
+            if branch_score > score
+                best_guess = branch
+                score = branch_score
+            end
+        end
+        best_guess
+    end
+
+    def score_move(guess, alpha)
+        score = @set.length-1
+        (0..3).each do |b|
+            (b..4).each do |w|
+                branch_score = @set.length-1
+                @set.each do |branch|
+                    branch_score-=1 if Game.check_response(guess, branch) == [b,w]
+                end
+                return branch_score if alpha < branch_score
+                score = branch_score if branch_score < score
+            end
+        end
+        score
     end
 end
 
@@ -80,6 +120,8 @@ class GameController
     def setup
         puts "Welcome to Mastermind. You will be decoding a four digit code made up of\n(R)ed\n(G)reen\n(B)lue\n(C)yan\n(Y)ellow\n(M)agenta\nYou have 10 tries and each entry will be graded with up to four letters:\n(b)-one for every correct digit\n(w)-one for every correct color but wrong position"
         if @player_1 == "AI"
+            puts "Computer is generating a random code..."
+            sleep 10
             @game = Game.new(AI.generate_code)
             play_game 
         else
@@ -99,10 +141,11 @@ class GameController
 
     def play_game
         system "clear"
+        ai_breaker = AI.new if @player_2 == "AI"
         until @game.victory? || @game.defeat?
-            if @player_2 == "AI"
+            if ai_breaker
                 puts "AI is making a guess..."
-                @game.guess(AI.guess(@game.guesses))
+                @game.guess(ai_breaker.guess(@game.guesses.last))
                 puts @game.display
             else
                 puts "#{@player_2}, please make your guess."
@@ -124,4 +167,9 @@ class GameController
     end
 end
 
-new_round = GameController.new("AI","Lily")
+puts "Please enter the name for codemaster, or if you want a computer generated code, enter AI"
+player_1 = gets.chomp
+puts "Please enter the name for codebreaker, or if you to test the codebreaking skill of AI(it's perfect), type AI."
+player_2 = gets.chomp
+
+new_round = GameController.new(player_1, player_2)
