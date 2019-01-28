@@ -1,0 +1,16 @@
+<div class="set">
+  <% color_classes = { 'R' => 'red', 'G' => 'green', 'B' => 'blue', 'C' => 'cyan', 'M' => 'magenta', 'Y' => 'yellow' }
+  guess[:code].each do |color| %>
+    <div class="square <%=color_classes[color]%> "></div>
+  <% end %>
+  <% guess[:correct].times do %>
+    <div class="dot black"></div>
+  <% end %>
+  <% (guess[:colors]-guess[:correct]).times do %>
+    <div class="dot white"></div>
+  <% end %>
+  <% (4-guess[:colors]).times do %>
+    <div class="dot blank"></div>
+  <% end %>
+  <div class="divider"></div>
+</div>

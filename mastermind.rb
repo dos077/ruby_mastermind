@@ -1,7 +1,7 @@
 class Mastermind
   attr_reader :guesses
 
-  $colors = ['R','G','B','C','M','Y']
+  @@colors = ['R','G','B','C','M','Y']
 
   def initialize(key_code)
       @key_code = key_code
@@ -27,17 +27,21 @@ class Mastermind
   end
 
   def victory?
-      display_code(@key_code) if @guesses.last && @guesses.last[:correct] == 4
+      @key_code if @guesses.last && @guesses.last[:correct] == 4
   end
 
   def defeat?
-      display_code(@key_code) if @guesses.length > 10
+      @key_code if @guesses.length >= 8
   end
 
   def self.legal?(code)
       code.kind_of?(Array)&&
       code.length == 4&&
-      code.all? { |e| $colors.include?(e) }
+      code.all? { |e| @@colors.include?(e) }
+  end
+
+  def self.colors
+    @@colors
   end
 
   def self.check_response(code, key )

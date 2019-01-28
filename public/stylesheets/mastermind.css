@@ -100,14 +100,14 @@ div.code .square {
   margin-left: 2vw;
 }
 div.code .digit { background-color: #6fd6a9; }
-.set .square, .set .dot, .button, .digit{
+.set .square, .dot.black, .dot.white, .button, .digit, .code .square{
   box-shadow: 0.1vw 0.1vw 0.2vw 0.05vw RGBA(0,0,0,0.3);
 }
 div.button a, div.button a:visited {
   color: inherit;
   text-decoration: none;
 }
-.empty div { box-shadow: inset 0.1vw 0.1vw 0.2vw 0.05vw RGBA(0,0,0,0.3); }
+.empty div, .blank { box-shadow: inset 0.1vw 0.1vw 0.2vw 0.05vw RGBA(0,0,0,0.3); }
 .red { background-color: #e23a41; }
 .blue { background-color: #2424f0; }
 .green { background-color: #24a965; }

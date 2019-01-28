@@ -15,11 +15,11 @@
           sets = 0
           if game.guesses
             set = game.guesses.length
-            game.guesses.each do |set| %>
-              <%= erb :set_row, locals => { :set => set } %>
+            game.guesses.each do |guess| %>
+              <%= erb :set_row, :locals => { :guess => guess } %>
             <% end
           end%>
-          <%= erb :select_row %>
+          <%= erb :select_row unless (game.victory? || game.defeat?) %>
           <% (7-set).times do%>
             <%= erb :empty_row %>
           <% end %>

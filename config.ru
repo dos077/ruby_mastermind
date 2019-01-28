@@ -1,5 +1,3 @@
-require './game_control'
-
-enable :sessions
+require './web_control'
 
 run GameController
