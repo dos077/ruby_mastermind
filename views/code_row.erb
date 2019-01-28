@@ -1,0 +1,22 @@
+<div class="code">
+  <% if game %>
+    <% if code = game.victory? || code = game.defeat?
+      color_classes = { 'R' => 'red', 'G' => 'green', 'B' => 'blue', 'C' => 'cyan', 'M' => 'magenta', 'Y' => 'yellow' }
+      code.each do |digit|%>
+        <div class="square <%=color_classes[digit]%> "></div>
+      <% end %>
+    <% else %>
+      <% %w(C O D E).each do |digit| %>
+        <div class="square digit"><span class="l1"><%=digit%></span></div>
+      <% end %>
+    <% end %>
+  <% else%>
+    <% 4.times do %>
+      <div class="square digit"><span class="l1">V</span></div>
+    <% end %>
+  <% end %>
+  
+  <div class="button black square" id="new_game">
+      <a href="/new"><span class="l2">NEW<br>GAME</span></a>
+  </div>
+</div>

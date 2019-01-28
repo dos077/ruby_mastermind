@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Mastermind</title>
+    <link rel="stylesheet" href="stylesheets/mastermind.css">
+    <script src="js/mastermind.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main">
+        <% unless game 
+          8.times do %>
+            <%= erb :empty_row %>
+          <%end
+        else 
+          sets = 0
+          if game.guesses
+            set = game.guesses.length
+            game.guesses.each do |set| %>
+              <%= erb :set_row, locals => { :set => set } %>
+            <% end
+          end%>
+          <%= erb :select_row %>
+          <% (7-set).times do%>
+            <%= erb :empty_row %>
+          <% end %>
+        <%end%>
+        <%= erb :code_row, :locals => { :game => game } %>
+      </div>
+      <div class="footer">
+        <h1>MASTERMIND</h1>
+        <p>Original design by Mordecai Meriowitz.</p>
+        <p>Ruby web demo design by James Huang for Odin Project Curriculum.</p>
+      </div>
+    </div>
+    <form id="form" name="form" action="/play">
+        <input name="guess" id="guess" type="text" />
+        <input class="button" type="submit" id="submit_btn" />
+    </form>
+    <script>
+        (function(){
+            listenSelectOptions();
+            listenSelectColors();
+        })();
+    </script>
+  </body>
+</html>
