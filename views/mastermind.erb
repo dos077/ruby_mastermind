@@ -19,8 +19,11 @@
               <%= erb :set_row, :locals => { :guess => guess } %>
             <% end
           end%>
-          <%= erb :select_row unless (game.victory? || game.defeat?) %>
-          <% (7-set).times do%>
+          <% unless (game.victory? || game.defeat?)
+            set += 1%>
+            <%= erb :select_row %>
+          <% end %>
+          <% (8-set).times do%>
             <%= erb :empty_row %>
           <% end %>
         <%end%>
