@@ -1,7 +1,6 @@
 require './mastermind.rb'
 require 'sinatra'
-require 'yaml'
-require 'sinatra/reloader'
+#require 'sinatra/reloader'
 
 class GameController < Sinatra::Base
   enable :sessions
